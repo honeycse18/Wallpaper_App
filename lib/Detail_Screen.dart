@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 import 'package:wallpaper_app/const/app_color.dart';
@@ -29,31 +28,6 @@ class Details extends StatelessWidget {
       var file = await DefaultCacheManager().getSingleFile(url);
       await WallpaperManager.setWallpaperFromFile(file.path, location);
       Fluttertoast.showToast(msg: 'Set Successfully');
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Failed');
-    }
-  }
-
-  downloadWallpaper(url) async {
-    try {
-      var imageId =
-          await ImageDownloader.downloadImage(url).catchError((error) {
-        if (error is PlatformException) {
-          var path = "";
-          if (error.code == "404") {
-            Fluttertoast.showToast(msg: 'Not Found Error');
-          } else if (error.code == "unsupported_file") {
-            Fluttertoast.showToast(msg: 'Unsupported File Error');
-            path = error.details["unsupported_file_path"];
-          }
-        }
-      });
-      if (imageId == null) {
-        return;
-      } else {
-        var path = await ImageDownloader.findPath(imageId);
-        Fluttertoast.showToast(msg: 'image saved to: $path');
-      }
     } catch (e) {
       Fluttertoast.showToast(msg: 'Failed');
     }
@@ -87,13 +61,6 @@ class Details extends StatelessWidget {
               ),
               label: 'Set Lockscreen',
               onPressed: () => setWallpaperHomeScreen(imgUrl)),
-          SpeedDialChild(
-              child: const Icon(
-                Icons.wallpaper,
-                size: 18,
-              ),
-              label: 'Download',
-              onPressed: () => downloadWallpaper(imgUrl)),
           SpeedDialChild(
               child: const Icon(
                 Icons.share,

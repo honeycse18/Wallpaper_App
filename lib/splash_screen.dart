@@ -12,9 +12,14 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   void initState() {
     Future.delayed(
-        Duration(seconds: 3),
-        () =>
-            Navigator.push(context, MaterialPageRoute(builder: (_) => Home())));
+      Duration(seconds: 3),
+      () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Home(),
+        ),
+      ),
+    );
     super.initState();
   }
 
@@ -23,7 +28,7 @@ class _SplashState extends State<Splash> {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          'assets/img/images.png',
+          'assets/img/logo.png',
           width: 120,
         ),
       ),

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_wallpaper_manager/flutter_wallpaper_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 import 'package:wallpaper_app/const/app_color.dart';
@@ -33,6 +36,41 @@ class Details extends StatelessWidget {
     }
   }
 
+  // downloadWallpaper(url) async {
+  //   try {
+  //     var imageId =
+  //         await ImageDownloader.downloadImage(url).catchError((error) {
+  //       if (error is PlatformException) {
+  //         var path = "";
+  //         if (error.code == "404") {
+  //           Fluttertoast.showToast(msg: 'Not Found Error.');
+  //         } else if (error.code == "unsupported_file") {
+  //           Fluttertoast.showToast(msg: 'UnSupported FIle Error.');
+  //           path = error.details["unsupported_file_path"];
+  //         }
+  //       }
+  //     });
+  //     if (imageId == null) {
+  //       return;
+  //     } else {
+  //       var path = await ImageDownloader.findPath(imageId);
+  //       Fluttertoast.showToast(msg: 'image saved to: $path');
+  //     }
+  //   } catch (e) {
+  //     Fluttertoast.showToast(
+  //       msg: 'failed',
+  //     );
+  //   }
+  // }
+
+  downloadWallpaper(url) async {
+    var time = DateTime.now().millisecondsSinceEpoch;
+    var path = "/storage/emulated/0/Download/image-$time.jpg";
+    var file = File(path);
+    var res = await get(Uri.parse(imgUrl));
+    file.writeAsBytes(res.bodyBytes);
+  }
+
   shareImage(url) async {
     Share.share(url);
   }
@@ -60,7 +98,15 @@ class Details extends StatelessWidget {
                 size: 18,
               ),
               label: 'Set Lockscreen',
-              onPressed: () => setWallpaperHomeScreen(imgUrl)),
+              onPressed: () => setWallpaperLockScreen(imgUrl)),
+          SpeedDialChild(
+            child: const Icon(
+              Icons.cloud_download,
+              size: 18,
+            ),
+            label: 'Download',
+            onPressed: () => downloadWallpaper(imgUrl),
+          ),
           SpeedDialChild(
               child: const Icon(
                 Icons.share,
